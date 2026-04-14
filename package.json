@@ -1,0 +1,81 @@
+{
+  "name": "@atlex/notifications",
+  "version": "0.1.0-beta",
+  "description": "Notification channels and database notifications for Atlex",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Karen Hamazaspyan",
+    "url": "https://github.com/khamazaspyan"
+  },
+  "keywords": [
+    "atlex",
+    "notifications",
+    "typescript"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atlex-framework/atlex-monorepo.git",
+    "directory": "packages/notifications"
+  },
+  "homepage": "https://atlex.dev",
+  "bugs": {
+    "url": "https://github.com/atlex-framework/atlex-monorepo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "lint": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run -c vitest.config.ts",
+    "prepublishOnly": "pnpm run typecheck && pnpm run build"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "@atlex/config": "workspace:*",
+    "@atlex/core": "workspace:*",
+    "@atlex/mail": "workspace:*",
+    "@atlex/orm": "workspace:*",
+    "@atlex/queue": "workspace:*",
+    "@atlex/storage": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "@atlex/storage": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@atlex/config": "workspace:*",
+    "@atlex/core": "workspace:*",
+    "@atlex/mail": "workspace:*",
+    "@atlex/orm": "workspace:*",
+    "@atlex/queue": "workspace:*",
+    "@atlex/storage": "workspace:*"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^11.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
+  }
+}
