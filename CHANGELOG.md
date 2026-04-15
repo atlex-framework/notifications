@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.5
+
+### Patch Changes
+
+- bf41f02: Fix CLI
+- Updated dependencies [bf41f02]
+  - @atlex/orm@0.1.5
+  - @atlex/config@0.1.5
+  - @atlex/core@0.1.5
+  - @atlex/mail@0.1.5
+  - @atlex/queue@0.1.5
+  - @atlex/storage@0.1.5
+
 ## 0.1.4
 
 ### Patch Changes
