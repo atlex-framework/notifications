@@ -11,6 +11,18 @@
   "keywords": [
     "atlex",
     "notifications",
+    "notification",
+    "multi-channel-notifications",
+    "slack-notifications",
+    "email-notifications",
+    "database-notifications",
+    "push-notifications",
+    "alert",
+    "notifiable",
+    "laravel-notifications",
+    "laravel-alternative",
+    "nodejs",
+    "javascript",
     "typescript"
   ],
   "engines": {

@@ -503,4 +503,6 @@ For complete documentation, visit [https://atlex.dev/guide/notifications](https:
 
 ## License
 
-MIT
+## MIT
+
+Part of [Atlex](https://atlex.dev) — A modern framework for Node.js.
