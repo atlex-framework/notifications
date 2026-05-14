@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.7
+
+### Patch Changes
+
+- ff97bcb: @atlex/core — WebSocket server with JWT auth on upgrade, room-based broadcasting (WsGateway, WsClient, WsRoom)
+  @atlex/notifications — APNs critical alerts that bypass Do Not Disturb (ApnsCriticalAlert, ApnsChannel)
+  @atlex/storage — Cloudflare R2 driver + getPresignedUrl() on all S3-compatible disks
+- Updated dependencies [ff97bcb]
+  - @atlex/storage@0.1.7
+  - @atlex/core@0.1.7
+  - @atlex/config@0.1.7
+  - @atlex/mail@0.1.7
+  - @atlex/orm@0.1.7
+  - @atlex/queue@0.1.7
+
 ## 0.1.6
 
 ### Patch Changes
