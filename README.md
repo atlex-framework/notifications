@@ -46,7 +46,7 @@ await user.notify(new OrderShippedNotification(order))
 
 ## Features
 
-- **Multi-Channel Delivery**: Send via mail, Slack, database, or custom channels
+- **Multi-Channel Delivery**: Send via mail, Slack, database, APNs, or custom channels
 - **Fluent API**: Build notifications with a clean, expressive interface
 - **Delayed Delivery**: Schedule notifications to be sent later
 - **Conditional Routing**: Decide delivery channels based on notification content
@@ -54,6 +54,7 @@ await user.notify(new OrderShippedNotification(order))
 - **Notifiable Models**: Add notification support to any model
 - **Event Hooks**: Listen to notification lifecycle events
 - **Queue Integration**: Async notification delivery with job queues
+- **APNs Critical Alerts**: Bypass Do Not Disturb with `sound.critical = 1` (v0.1.7)
 
 ## Creating Notifications
 
@@ -466,6 +467,122 @@ const order = await Order.find(123)
 await order.notify(new OrderStatusChangedNotification(order, 'pending', 'shipped'))
 ```
 
+## APNs Critical Alerts
+
+`@atlex/notifications` v0.1.7 adds `ApnsCriticalAlert` and `ApnsChannel` for sending Apple Push Notifications that bypass Do Not Disturb and play at full volume — required for emergency features such as an SOS button.
+
+> **Apple entitlement required.** Critical alerts need `com.apple.developer.usernotifications.critical-alerts` approved by Apple. Without it, the notification is delivered as a standard push and will not bypass Do Not Disturb. Request the entitlement at [developer.apple.com](https://developer.apple.com/contact/request/notifications-critical-alerts-entitlement/) and add it to `Entitlements.plist`:
+>
+> ```xml
+> <key>com.apple.developer.usernotifications.critical-alerts</key>
+> <true/>
+> ```
+
+### Build a Critical Alert Notification
+
+```typescript
+import { Notification } from '@atlex/notifications'
+import { ApnsCriticalAlert } from '@atlex/notifications'
+
+export class SuperSignalNotification extends Notification {
+  constructor(
+    private childName: string,
+    private eventId: string,
+  ) {
+    super()
+  }
+
+  via(_notifiable: User) {
+    return ['apns']
+  }
+
+  toApns(_notifiable: User): ApnsCriticalAlert {
+    return new ApnsCriticalAlert()
+      .title('Emergency Alert')
+      .body(`${this.childName} triggered SOS`)
+      .sound({ critical: 1, name: 'default', volume: 1.0 })
+      .contentAvailable()
+      .deepLink(`kidup://super-signal/${this.eventId}`)
+  }
+}
+```
+
+This produces the following APNs payload:
+
+```json
+{
+  "aps": {
+    "alert": { "title": "Emergency Alert", "body": "Child triggered SOS" },
+    "sound": { "critical": 1, "name": "default", "volume": 1.0 },
+    "content-available": 1
+  },
+  "deepLink": "kidup://super-signal/abc123"
+}
+```
+
+### Implement an ApnsSender
+
+`ApnsChannel` requires an `ApnsSender` — a thin adapter to your APNs HTTP/2 client:
+
+```typescript
+import apn from 'apn'
+import type { ApnsSender, ApnsPayload } from '@atlex/notifications'
+
+class MyApnsSender implements ApnsSender {
+  private provider = new apn.Provider({
+    /* your APNs credentials */
+  })
+
+  async send(deviceToken: string, payload: ApnsPayload): Promise<void> {
+    const note = new apn.Notification()
+    note.rawPayload = payload
+    await this.provider.send(note, deviceToken)
+  }
+}
+```
+
+### Register the Channel
+
+```typescript
+import { NotificationsServiceProvider, ApnsChannel } from '@atlex/notifications'
+
+app.register(
+  new NotificationsServiceProvider({
+    channels: {
+      apns: new ApnsChannel(new MyApnsSender()),
+    },
+  }),
+)
+```
+
+### Route the Device Token
+
+Your notifiable model must return the APNs device token for the `'apns'` channel:
+
+```typescript
+class User extends Notifiable(Model) {
+  routeNotificationFor(channel: string): unknown {
+    if (channel === 'apns') return this.device_token
+    if (channel === 'mail') return this.email
+  }
+}
+
+// Send
+await user.notify(new SuperSignalNotification(child.name, event.id))
+```
+
+### ApnsCriticalAlert API
+
+| Method               | Returns       | Description                                           |
+| -------------------- | ------------- | ----------------------------------------------------- |
+| `title(value)`       | `this`        | Alert title text                                      |
+| `body(value)`        | `this`        | Alert body text                                       |
+| `sound(value)`       | `this`        | APNs `aps.sound` object (`critical: 1` required)      |
+| `contentAvailable()` | `this`        | Sets `content-available: 1` for background processing |
+| `deepLink(url)`      | `this`        | Adds `deepLink` key to the top-level payload          |
+| `data(key, value)`   | `this`        | Add any custom top-level payload key                  |
+| `toPayload()`        | `ApnsPayload` | Build the complete APNs payload object                |
+
 ## API Overview
 
 ### Notification
@@ -491,11 +608,12 @@ await order.notify(new OrderStatusChangedNotification(order, 'pending', 'shipped
 
 ### Channels
 
-| Channel           | Description         |
-| ----------------- | ------------------- |
-| `MailChannel`     | Email notifications |
-| `DatabaseChannel` | Store in database   |
-| `SlackChannel`    | Send to Slack       |
+| Channel           | Description                                |
+| ----------------- | ------------------------------------------ |
+| `MailChannel`     | Email notifications                        |
+| `DatabaseChannel` | Store in database                          |
+| `SlackChannel`    | Send to Slack                              |
+| `ApnsChannel`     | Apple Push Notifications (critical alerts) |
 
 ## Documentation
 

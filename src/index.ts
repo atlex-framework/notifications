@@ -21,6 +21,10 @@ export { NotificationFailedException } from './exceptions/NotificationFailedExce
 export { MailChannel } from './channels/MailChannel.js'
 export { DatabaseChannel } from './channels/DatabaseChannel.js'
 export { SlackChannel } from './channels/SlackChannel.js'
+export { ApnsCriticalAlert } from './channels/ApnsCriticalAlert.js'
+export type { ApnsPayload, ApnsCriticalAlertSound } from './channels/ApnsCriticalAlert.js'
+export { ApnsChannel } from './channels/ApnsChannel.js'
+export type { ApnsSender } from './channels/ApnsChannel.js'
 export type { NotificationChannel } from './channels/NotificationChannel.js'
 
 export { MailMessage } from './messages/MailMessage.js'
