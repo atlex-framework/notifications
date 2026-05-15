@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.10
+
+### Patch Changes
+
+- 7279e8a: Add patch
+- Updated dependencies [7279e8a]
+  - @atlex/config@0.1.10
+  - @atlex/core@0.1.10
+  - @atlex/mail@0.1.10
+  - @atlex/queue@0.1.10
+  - @atlex/storage@0.1.10
+
 ## 0.1.9
 
 ### Patch Changes
