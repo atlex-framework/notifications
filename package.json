@@ -1,6 +1,6 @@
 {
   "name": "@atlex/notifications",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Notification channels and database notifications for Atlex",
   "type": "module",
   "license": "MIT",
