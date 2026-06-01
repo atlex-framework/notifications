@@ -1,6 +1,6 @@
 {
   "name": "@atlex/notifications",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "description": "Notification channels and database notifications for Atlex",
   "type": "module",
   "license": "MIT",
@@ -64,12 +64,12 @@
     }
   },
   "peerDependencies": {
-    "@atlex/config": "workspace:*",
-    "@atlex/core": "workspace:*",
-    "@atlex/mail": "workspace:*",
-    "@atlex/orm": "workspace:*",
-    "@atlex/queue": "workspace:*",
-    "@atlex/storage": "workspace:*"
+    "@atlex/config": "workspace:>=0.2.0",
+    "@atlex/core": "workspace:>=0.2.0",
+    "@atlex/mail": "workspace:>=0.2.0",
+    "@atlex/orm": "workspace:>=0.2.0",
+    "@atlex/queue": "workspace:>=0.2.0",
+    "@atlex/storage": "workspace:>=0.2.0"
   },
   "peerDependenciesMeta": {
     "@atlex/storage": {
